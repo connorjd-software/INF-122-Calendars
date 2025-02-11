@@ -19,9 +19,16 @@ public class Event {
         return name;
     }
 
-
     public LocalDateTime getStart() {
         return start;
+    }
+
+    public void setStart(LocalDateTime start) {
+        this.start = start;
+    }
+
+    public void setEnd(LocalDateTime end) {
+        this.end = end;
     }
 
     public LocalDateTime getEnd() {
