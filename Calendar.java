@@ -58,4 +58,9 @@ public class Calendar {
     public void notateEvent(Event event, String notes) {
 
     }
+
+    // Added this method for CLI options
+    public static void displayOptions() {
+
+    }
 }

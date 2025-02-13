@@ -1,5 +1,3 @@
-
-import java.util.Calendar;
 import java.util.HashMap;
 
 public class User {
@@ -28,6 +26,16 @@ public class User {
 
     public void updateCalendar(String calendarName, Calendar newCalendar) {
         calendars.replace(calendarName, newCalendar);
+    }
+
+    public static void displayOptions() {
+        System.out.println("\n=== User Options ===");
+        System.out.println("b = Back to Menu");
+        System.out.println("n = Add Calendar");
+        System.out.println("r = Remove Calendar");
+        System.out.println("u = Update Calendar");
+        System.out.println("====================");
+        System.out.print("Enter choice then press enter: ");
     }
 
     /* Not Implemented
