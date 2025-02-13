@@ -1,5 +1,6 @@
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Set;
 
 
 public class Application {
@@ -32,11 +33,15 @@ public class Application {
 
 
     public void addUser(String userName) {
-        users.put(userName, new User(userName));
+        if (!users.containsKey(userName)) {
+            users.put(userName, new User(userName));
+        } else {
+            System.out.println("User '" + userName + "' already exists.");
+        }
     }
 
-    public HashMap<String, User> getUsers() {
-        return users;
+    public Set<String> getUsers() {
+        return users.keySet();
     }
 
     public void setCurrentUser(String username) {
@@ -50,18 +55,25 @@ public class Application {
             application.displayOptions();
             int key = System.in.read();
             if (key == 'q') break;
-            if (key == 'u') {
-                System.out.print("Please enter new username: ");
-                String username = System.console().readLine();
-                application.addUser(username);
+            switch (key) {
+                case 'u':
+                    System.out.print("Please enter new username: ");
+                    String username = System.console().readLine();
+                    application.addUser(username);
+                    break;
+                case 'd':
+                    System.out.println("Users: " + application.getUsers());
+                    break;
+                case 's':
+                    System.out.println("Select the user #: ");
+                    for (int i = 0; i < application.getUsers().size(); ++i) {
+                        System.out.println(i + ". " + application.getUsers());
+                    }
+                default:
+                    System.out.println("Not a valid command.");
             }
-            if (key == 'd') {
-                System.out.println("Users: " + application.getUsers());
-            }
-
 
             long skipped = System.in.skip(2);
-            System.out.println("Key Pressed: " + (char) key);
         }
     }
 

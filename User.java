@@ -28,6 +28,7 @@ public class User {
         calendars.replace(calendarName, newCalendar);
     }
 
+    // Added for CLI
     public static void displayOptions() {
         System.out.println("\n=== User Options ===");
         System.out.println("b = Back to Menu");
