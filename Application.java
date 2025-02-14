@@ -1,80 +1,92 @@
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.HashMap;
-import java.util.Set;
-
+import java.util.List;
+import java.util.ArrayList;
 
 public class Application {
-    // CLI variables & methods (added)
-    public static final int CLI_WIDTH = 74;
-    public static void printCentered(String text, int width) {
-        int padding = (width - text.length()) / 2;
-        String formattedText = String.format("%" + padding + "s%s%" + padding + "s", "", text, "");
-
-        formattedText = formattedText.length() > width ? formattedText.substring(0, width)
-                : String.format("%-" + width + "s", formattedText);
-
-        System.out.println("|" + formattedText + "|");
-    }
-
-    private HashMap<String, User> users;
+    private final HashMap<String, User> users;
     private User currentUser;
-    private Calendar currentCalendar;
 
     public Application() {
         users = new HashMap<>();
     }
 
     public void displayOptions() {
-        System.out.println("\n=============================== Menu Options ===============================");
-        printCentered("q = Quit | u = Add User | s = Select User | d = Display Users", CLI_WIDTH);
-        System.out.println("============================================================================");
-        System.out.print("Enter choice then press enter: ");
+        cli.printCenteredOptions("Menu Options", "q = Quit | u = Add User | s = Select User | d = Display Users");
     }
-
 
     public void addUser(String userName) {
         if (!users.containsKey(userName)) {
             users.put(userName, new User(userName));
+            System.out.println("User '" + userName + "' added successfully.");
         } else {
             System.out.println("User '" + userName + "' already exists.");
         }
     }
 
-    public Set<String> getUsers() {
-        return users.keySet();
+    public List<String> getUsersList() {
+        return new ArrayList<>(users.keySet());
     }
 
-    public void setCurrentUser(String username) {
-        this.currentUser = users.get(username);
+    public User getCurrentUser() {
+        return currentUser;
+    }
+
+    public void setCurrentUser(int index) throws IOException {
+        List<String> userList = getUsersList();
+        if (index > 0 && index <= userList.size()) {
+            currentUser = users.get(userList.get(index - 1));
+            System.out.println("Current user set to: " + getCurrentUser().username);
+            currentUser.handleUserOptions();
+        } else {
+            System.out.println("Invalid selection.");
+        }
     }
 
     public static void main(String[] args) throws IOException {
         Application application = new Application();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 
         while (true) {
             application.displayOptions();
-            int key = System.in.read();
-            if (key == 'q') break;
-            switch (key) {
-                case 'u':
+            String input = reader.readLine().trim();
+
+            switch (input) {
+                case "q":
+                    System.out.println("Exiting application.");
+                    return;
+                case "u":
                     System.out.print("Please enter new username: ");
-                    String username = System.console().readLine();
+                    String username = reader.readLine().trim();
                     application.addUser(username);
                     break;
-                case 'd':
-                    System.out.println("Users: " + application.getUsers());
+                case "d":
+                    System.out.println("Users: " + application.getUsersList());
                     break;
-                case 's':
-                    System.out.println("Select the user #: ");
-                    for (int i = 0; i < application.getUsers().size(); ++i) {
-                        System.out.println(i + ". " + application.getUsers());
+                case "s":
+                    List<String> usersList = application.getUsersList();
+                    if (usersList.isEmpty()) {
+                        System.out.println("No users available.");
+                        break;
                     }
+                    System.out.println("Select a user by number:");
+                    for (int i = 0; i < usersList.size(); i++) {
+                        System.out.println((i + 1) + ". " + usersList.get(i));
+                    }
+                    System.out.print("Enter number: ");
+                    try {
+                        int selectedIndex = Integer.parseInt(reader.readLine().trim());
+                        application.setCurrentUser(selectedIndex);
+
+                    } catch (NumberFormatException e) {
+                        System.out.println("Invalid input. Please enter a number.");
+                    }
+                    break;
                 default:
                     System.out.println("Not a valid command.");
             }
-
-            long skipped = System.in.skip(2);
         }
     }
-
 }

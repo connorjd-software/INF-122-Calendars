@@ -1,4 +1,7 @@
 import java.util.HashMap;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 
 public class User {
     public String username;
@@ -30,13 +33,40 @@ public class User {
 
     // Added for CLI
     public static void displayOptions() {
-        System.out.println("\n=== User Options ===");
-        System.out.println("b = Back to Menu");
-        System.out.println("n = Add Calendar");
-        System.out.println("r = Remove Calendar");
-        System.out.println("u = Update Calendar");
-        System.out.println("====================");
-        System.out.print("Enter choice then press enter: ");
+        cli.printCenteredOptions("User Options", "b = Back to Menu | n = New Calendar | r = Remove Calendar | u = Update Calendar");
+    }
+
+    public void handleUserOptions() throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        while (true) {
+            displayOptions();
+            String input = reader.readLine().trim();
+            switch (input) {
+                case "b":
+                    System.out.println("Returning to main menu.");
+                    return;
+                case "n":
+                    System.out.print("Enter new calendar name: ");
+                    String newCalendarName = reader.readLine().trim();
+                    // TODO: FINISH THIS
+                    System.out.println("Calendar '" + newCalendarName + "' added.");
+                    break;
+                case "r":
+                    System.out.print("Enter calendar name to delete: ");
+                    String removeCalendarName = reader.readLine().trim();
+                    removeCalendar(removeCalendarName);
+                    System.out.println("Calendar '" + removeCalendarName + "' removed.");
+                    break;
+                case "u":
+                    System.out.print("Enter calendar name to update: ");
+                    String updateCalendarName = reader.readLine().trim();
+                    // TODO: FINISH THIS
+                    System.out.println("Calendar '" + updateCalendarName + "' updated.");
+                    break;
+                default:
+                    System.out.println("Invalid choice, please try again.");
+            }
+        }
     }
 
     /* Not Implemented
