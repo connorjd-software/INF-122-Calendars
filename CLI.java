@@ -1,7 +1,6 @@
-
 // Added this class for cli implementation
-public class cli {
-    public static final int CLI_WIDTH = 100;
+public class CLI {
+    public static final int CLI_WIDTH = 120;
 
     public static void printCenteredOptions(String title, String options) {
         int padding = (CLI_WIDTH - options.length()) / 2;

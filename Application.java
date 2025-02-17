@@ -14,7 +14,7 @@ public class Application {
     }
 
     public void displayOptions() {
-        cli.printCenteredOptions("Menu Options", "q = Quit | u = Add User | s = Select User | d = Display Users");
+        CLI.printCenteredOptions("Menu Options", "q = Quit | a = Add User | s = Select User");
     }
 
     public void addUser(String userName) {
@@ -26,12 +26,13 @@ public class Application {
         }
     }
 
-    public List<String> getUsersList() {
-        return new ArrayList<>(users.keySet());
-    }
-
     public User getCurrentUser() {
         return currentUser;
+    }
+
+    // Added these for more depth/functionality
+    private List<String> getUsersList() {
+        return new ArrayList<>(users.keySet());
     }
 
     public void setCurrentUser(int index) throws IOException {
@@ -57,13 +58,10 @@ public class Application {
                 case "q":
                     System.out.println("Exiting application.");
                     return;
-                case "u":
+                case "a":
                     System.out.print("Please enter new username: ");
                     String username = reader.readLine().trim();
                     application.addUser(username);
-                    break;
-                case "d":
-                    System.out.println("Users: " + application.getUsersList());
                     break;
                 case "s":
                     List<String> usersList = application.getUsersList();
@@ -79,13 +77,12 @@ public class Application {
                     try {
                         int selectedIndex = Integer.parseInt(reader.readLine().trim());
                         application.setCurrentUser(selectedIndex);
-
                     } catch (NumberFormatException e) {
                         System.out.println("Invalid input. Please enter a number.");
                     }
                     break;
                 default:
-                    System.out.println("Not a valid command.");
+                    System.out.println("Invalid choice, please try again.");
             }
         }
     }

@@ -4,8 +4,6 @@ import java.util.ArrayList;
 
 public class Calendar {
     public TimeZone timezone;
-
-    private Screen screen;
     private User owner;
     private ArrayList<Event> events;
     private boolean isPrivate;
@@ -13,16 +11,22 @@ public class Calendar {
     private Calendar previousVersion;
     private String notes;
 
+    // Added these
+    private String name;
+
+
     /* Not implemented
 
     private HashMap<String, Event> deletedEvents;
 
     */
 
-    public Calendar(User owner, Screen screen, boolean isPrivate) {
-        this.screen = screen;
+
+    // Removed screen to reflect new UML
+    public Calendar(User owner, String name) {
         this.owner = owner;
-        this.isPrivate = isPrivate;
+        this.name = name;
+        this.isPrivate = true;
     }
 
     public void addEvent(Event event) {
@@ -59,8 +63,17 @@ public class Calendar {
 
     }
 
-    // Added this method for CLI options
-    public static void displayOptions() {
+    @Override
+    public String toString() {
+        return this.name;
+    }
+
+    // Added methods for CLI options
+    public void handleUserOptions() {
+
+    }
+
+    public void displayCalendar() {
 
     }
 }
