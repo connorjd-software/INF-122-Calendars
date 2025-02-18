@@ -37,7 +37,7 @@ public class User {
         calendars.replace(calendarName, newCalendar);
     }
 
-    public void setSelectedCalendar(int index) {
+    public void setSelectedCalendar(int index) throws IOException {
         List<String> calendarList = getCalendarsList();
         if (index > 0 && index <= calendarList.size()) {
             selectedCalendar = calendars.get(calendarList.get(index - 1));

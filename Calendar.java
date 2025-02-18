@@ -1,3 +1,7 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.TimeZone;
 import java.util.ArrayList;
@@ -69,8 +73,35 @@ public class Calendar {
     }
 
     // Added methods for CLI options
-    public void handleUserOptions() {
+    public void displayOptions() {
+        CLI.printCenteredOptions(name, "b = Back | a = Add event | e = Edit Event | t = Toggle Privacy | s = Share With");
+    }
 
+    public void handleUserOptions() throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        while (true) {
+            displayOptions();
+            String input = reader.readLine().trim();
+            switch (input) {
+                case "b":
+                    System.out.println("Returning to main menu.");
+                    return;
+                case "a":
+                    System.out.print("Enter event name: ");
+                    String eventName = reader.readLine().trim();
+                    System.out.print("Enter event start time (YYYY-MM-DDTHH:MM): ");
+                    LocalDateTime startTime = LocalDateTime.parse(reader.readLine().trim());
+                    System.out.print("Enter event end time (YYYY-MM-DDTHH:MM): ");
+                    LocalDateTime endTime = LocalDateTime.parse(reader.readLine().trim());
+                    System.out.print("Enter event description: ");
+                    String description = reader.readLine().trim();
+                    addEvent(new Event(eventName, startTime, endTime, description));
+                    System.out.println("\nEvent added.");
+                    break;
+                case "e":
+
+            }
+        }
     }
 
     public void displayCalendar() {
