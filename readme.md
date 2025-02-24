@@ -1,7 +1,5 @@
 # CLC - Command Line Calendars
 
-***
-
 ## Instructions on running the application
 
 ### 1. Compile the java code with this command:
