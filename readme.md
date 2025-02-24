@@ -2,6 +2,13 @@
 
 ***
 
+## Built with the following version of java:
+```
+java 23 2024-09-17
+Java(TM) SE Runtime Environment (build 23+37-2369)
+Java HotSpot(TM) 64-Bit Server VM (build 23+37-2369, mixed mode, sharing)
+```
+
 ## Instructions on running the .jar 
 
 ### 1. Run the following command from where your .jar file is located:
