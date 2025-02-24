@@ -2,7 +2,15 @@
 
 ***
 
-## Instructions on running the application
+## Instructions on running the .jar 
+
+### 1. Run the following command from where your .jar file is located:
+```
+java -jar CalendarsApp.jar
+```
+
+
+## Instructions on compiling and running the application
 
 ### 1. Compile the java code with this command:
 ```
