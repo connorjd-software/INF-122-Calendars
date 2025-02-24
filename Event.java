@@ -1,7 +1,7 @@
 import java.time.LocalDateTime;
 
 public class Event {
-    private String name;
+    private final String name;
     private LocalDateTime start;
     private LocalDateTime end;
     private Event previousVersion;
