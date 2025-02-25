@@ -80,13 +80,12 @@ public class Calendar {
 
     // Added methods for CLI options
     public void displayOptions() {
-        CLI.printCenteredOptions(name, "b = Back | a = Add event | e = Edit Event | t = Toggle Privacy | s = Share With");
+        CLI.printCenteredOptions(name, "b = Back | a = Add event | e = Edit Event | t = Toggle Privacy | s = Share With | v = Change View");
     }
 
     public void handleUserOptions() throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         while (true) {
-            displayCalendar();
             displayOptions();
             String input = reader.readLine().trim();
             switch (input) {
@@ -104,15 +103,16 @@ public class Calendar {
                         System.out.print("Enter event description: ");
                         String description = reader.readLine().trim();
                         addEvent(new Event(eventName, startTime, endTime, description));
-                        System.out.println("\nEvent added.");
+                        System.out.println("Event added.");
                     } catch (DateTimeParseException e) {
                         System.out.println("Error parsing date-time input (Make sure you use the format YYYY-MM-DDTHH:MM with the T in-between DD and HH.");
                     }
                     break;
                 case "e":
+                    System.out.println("Edit Event feature is not yet implemented.");
                     break;
                 case "t":
-                    String visibility = this.isPrivate ? "private" : "public";
+                    String visibility = this.isPrivate ? "public" : "private";
                     toggleIsPrivate();
                     System.out.println("Changed calendar visibility to: " + visibility);
                     break;
@@ -120,57 +120,105 @@ public class Calendar {
                     System.out.print("Enter username to share with: ");
                     String username = reader.readLine().trim();
                     shareWith(username);
-
+                    break;
+                case "v":
+                    changeView();
+                    break;
+                default:
+                    System.out.println("Invalid option.");
             }
         }
     }
 
-    public void displayCalendar() {
-        // Get current date
-        LocalDate today = LocalDate.now();
-        int currentMonth = today.getMonthValue();
-        int currentYear = today.getYear();
-
-        // Get first day of the month
-        LocalDate firstDayOfMonth = LocalDate.of(currentYear, currentMonth, 1);
-        int firstDayOfWeek = firstDayOfMonth.getDayOfWeek().getValue(); // 1 = Monday, ... 7 = Sunday
-
-        // Adjust for Sunday start
-        firstDayOfWeek = (firstDayOfWeek % 7);
-
-        // Get number of days in the month
-        int daysInMonth = firstDayOfMonth.lengthOfMonth();
-
-        // Collect events by day
-        HashMap<Integer, String> eventDays = new HashMap<>();
-        for (Event event : events) {
-            int eventDay = event.getStart().getDayOfMonth();
-            eventDays.put(eventDay, event.getName());
+    private void changeView() throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        System.out.print("Select view (d = Day | w = Week | m = Month | y = Year): ");
+        String input = reader.readLine().trim();
+        switch (input) {
+            case "d":
+                displayDayView(LocalDate.now());
+                break;
+            case "w":
+                displayWeekView();
+                break;
+            case "m":
+                displayMonthView();
+                break;
+            case "y":
+                displayYearView();
+                break;
+            default:
+                System.out.println("Invalid view option.");
         }
+    }
 
-        // Display calendar header
-        System.out.println("\n     " + today.getMonth() + " " + currentYear);
-        System.out.println(" Su   Mo   Tu   We   Th   Fr   Sa");
-
-        // Print padding for the first week
-        for (int i = 0; i < firstDayOfWeek; i++) {
-            System.out.print("    ");
-        }
-
-        // Print the days of the month
-        for (int day = 1; day <= daysInMonth; day++) {
-            // Check if there is an event on this day
-            if (eventDays.containsKey(day)) {
-                System.out.printf("[%2d] ", day); // Event days in brackets
-            } else {
-                System.out.printf(" %2d  ", day); // Regular days
+    public void displayDayView(LocalDate date) {
+        System.out.println("Day View: " + date);
+        boolean hasEvents = false;
+        for (int hour = 0; hour < 24; hour++) {
+            LocalDateTime startHour = date.atTime(hour, 0);
+            LocalDateTime endHour = date.atTime(hour, 59);
+            System.out.printf("%02d:00 - %02d:59: ", hour, hour);
+            boolean eventInHour = false;
+            for (Event event : events) {
+                if (!event.getStart().isAfter(endHour) && !event.getEnd().isBefore(startHour)) {
+                    System.out.print(event.getName() + " ");
+                    eventInHour = true;
+                    hasEvents = true;
+                }
             }
+            if (!eventInHour) {
+                System.out.print("No events");
+            }
+            System.out.println();
+        }        for (Event event : events) {
+            if (event.getStart().toLocalDate().equals(date)) {
+                System.out.println("- " + event.getName() + " from " + event.getStart().toLocalTime() + " to " + event.getEnd().toLocalTime());
+                hasEvents = true;
+            }
+        }
+        if (!hasEvents) {
+            System.out.println("No events scheduled for today.");
+        }
+    }
 
-            // New line at the end of the week
-            if ((day + firstDayOfWeek) % 7 == 0) {
+    public void displayWeekView() {
+        LocalDate today = LocalDate.now();
+        LocalDate startOfWeek = today.minusDays(today.getDayOfWeek().getValue() % 7);
+        LocalDate endOfWeek = startOfWeek.plusDays(6);
+
+        System.out.println("Week View: " + startOfWeek + " to " + endOfWeek);
+
+        for (LocalDate date = startOfWeek; !date.isAfter(endOfWeek); date = date.plusDays(1)) {
+            System.out.println(date + " (" + date.getDayOfWeek() + ")");
+
+            for (int hour = 0; hour < 24; hour++) {
+                LocalDateTime startHour = date.atTime(hour, 0);
+                LocalDateTime endHour = date.atTime(hour, 59);
+                System.out.printf("%02d:00 - %02d:59: ", hour, hour);
+
+                boolean eventInHour = false;
+                for (Event event : events) {
+                    if (!event.getStart().isAfter(endHour) && !event.getEnd().isBefore(startHour)) {
+                        System.out.print(event.getName() + " ");
+                        eventInHour = true;
+                    }
+                }
+                if (!eventInHour) {
+                    System.out.print("No events");
+                }
                 System.out.println();
             }
         }
-        System.out.println("A date surrounded by brackets [] indicates event(s) on that day.");
+    }
+
+    public void displayMonthView() {
+        System.out.println("Month View");
+        // Implementation for month view
+    }
+
+    public void displayYearView() {
+        System.out.println("Year View");
+        // Implementation for year view
     }
 }
