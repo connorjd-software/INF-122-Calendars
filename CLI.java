@@ -1,8 +1,17 @@
-// Added this class for cli implementation
 public class CLI {
     public static final int CLI_WIDTH = 120;
+    private static CLI instance; // Singleton instance
 
-    public static void printCenteredOptions(String title, String options) {
+    private CLI() {} // Private constructor to prevent instantiation
+
+    public static CLI getInstance() {
+        if (instance == null) {
+            instance = new CLI();
+        }
+        return instance;
+    }
+
+    public void printCenteredOptions(String title, String options) {
         int padding = (CLI_WIDTH - options.length()) / 2;
         String formattedText = String.format("%-" + CLI_WIDTH + "s", " ".repeat(padding) + options);
 

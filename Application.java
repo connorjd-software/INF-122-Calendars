@@ -14,7 +14,7 @@ public class Application {
     }
 
     public void displayOptions() {
-        CLI.printCenteredOptions("Menu Options", "q = Quit | a = Add User | s = Select User");
+        CLI.getInstance().printCenteredOptions("Menu Options", "q = Quit | a = Add User | s = Select User");
     }
 
     public void addUser(String userName) {
