@@ -46,13 +46,25 @@ public class Application {
         }
     }
 
+    private void displayUserList(List<String> usersList) {
+        System.out.println("Select a user by number:");
+        for (int i = 0; i < usersList.size(); i++) {
+            System.out.println((i + 1) + ". " + usersList.get(i));
+        }
+    }
+
+
+    public String readInput(BufferedReader reader) throws IOException {
+        return reader.readLine().trim();
+    }
+
     public static void main(String[] args) throws IOException {
         Application application = new Application();
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 
         while (true) {
             application.displayOptions();
-            String input = reader.readLine().trim();
+            String input = application.readInput(reader);
 
             switch (input) {
                 case "q":
@@ -60,7 +72,7 @@ public class Application {
                     return;
                 case "a":
                     System.out.print("Please enter new username: ");
-                    String username = reader.readLine().trim();
+                    String username = application.readInput(reader);
                     application.addUser(username);
                     break;
                 case "s":
@@ -69,13 +81,10 @@ public class Application {
                         System.out.println("No users available.");
                         break;
                     }
-                    System.out.println("Select a user by number:");
-                    for (int i = 0; i < usersList.size(); i++) {
-                        System.out.println((i + 1) + ". " + usersList.get(i));
-                    }
+                    application.displayUserList(usersList);
                     System.out.print("Enter number: ");
                     try {
-                        int selectedIndex = Integer.parseInt(reader.readLine().trim());
+                        int selectedIndex = Integer.parseInt(application.readInput(reader));
                         application.setCurrentUser(selectedIndex);
                     } catch (NumberFormatException e) {
                         System.out.println("Invalid input. Please enter a number.");
